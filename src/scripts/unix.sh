@@ -55,8 +55,10 @@ read_env() {
   fail_fast="${fail_fast:-${FAIL_FAST:-false}}"
   [[ -z "${ImageOS}" && -z "${ImageVersion}" || -n ${ACT} ]] && _runner=self-hosted || _runner=github
   runner="${runner:-${RUNNER:-$_runner}}"
+  github_emulation="${github_emulation:-${GITHUB_EMULATION:-false}}"
 
-  if [[ "$runner" = "github" && $_runner = "self-hosted" ]]; then
+
+  if [[ "$runner" = "github" && $_runner = "self-hosted" && "${github_emulation:?}" != "true" ]]; then
     fail_fast=true
     add_log "$cross" "Runner" "Runner set as github in self-hosted environment"
   fi
@@ -75,6 +77,7 @@ read_env() {
   export runner
   export update
   export ts
+  export github_emulation
 }
 
 # Function to download a file using cURL.
